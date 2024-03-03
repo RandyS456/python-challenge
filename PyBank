@@ -1,1 +1,57 @@
+# Import the pathlib and csv library
+from pathlib import Path
+import csv
+
+#Set the file path
+csvpath = Path("../PyBank/budget_data.csv")
+
+# Initialize variables
+total_months = 0
+total_profit_losses = 0
+previous_profit_loss = 0
+change_list = []
+greatest_increase = ["", 0]
+greatest_decrease = ["", 0]
+
+# Read the CSV file
+with open("../PyBank/budget_data.csv") as file:
+    csv_reader = csv.reader(file, delimiter=',')
+
+    # Skip header row
+    next(csv_reader)
+
+    # Loop through each row
+    for row in csv_reader:
+        # Calculate total months
+        total_months += 1
+
+        # Calculate total profit/losses
+        total_profit_losses += int(row[1])
+
+        # Calculate the change in profit/losses
+        change = int(row[1]) - previous_profit_loss
+
+        # Add the change to the list
+        change_list.append(change)
+
+        # Update the previous profit/loss
+        previous_profit_loss = int(row[1])
+
+        # Find the greatest increase and decrease
+        if change > greatest_increase[1]:
+            greatest_increase = [row[0], change]
+        if change < greatest_decrease[1]:
+            greatest_decrease = [row[0], change]
+
+    # Calculate the average change
+    average_change = sum(change_list[1:]) / len(change_list[1:])
+
+    # Print the financial analysis
+    print("Financial Analysis")
+    print("-------------------------")
+    print(f"Total Months: {total_months}")
+    print(f"Total: ${total_profit_losses}")
+    print(f"Average Change: ${average_change:.2f}")
+    print(f"Greatest Increase in Profits: {greatest_increase[0]} ($ {greatest_increase[1]})")
+    print(f"Greatest Decrease in Profits: {greatest_decrease[0]} ($ {greatest_decrease[1]})")
 
